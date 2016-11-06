@@ -9,19 +9,28 @@ import "strings"
 var MAX = 24
 var conf_file = "reddit.conf"
 
-func print_headlines(count int, news bool) {
-    if news {
-        doc, err := goquery.NewDocument("https://reddit.com/r/technology")
-        if err != nil {
-            fmt.Println("Whoops!")
-            return
-        }
-        doc.Find(".entry").Each(func(i int, s *goquery.Selection) {
-            if i < count {
-                title := s.Find("p .title").Text()
-                fmt.Printf("[%d]: %s\n\n",i,  title)
+func print_headlines(count int, bool_flags []*bool, urls []string) {
+    fmt.Println(urls[0])
+    for i, f := range bool_flags {
+        if *f {
+            fmt.Println(i)
+            fmt.Println("suffix: ", urls[i])
+            elem := []string{"https://reddit.com", urls[i]}
+            fmt.Println(elem)
+            url := strings.Join(elem, "/")
+            fmt.Println(url)
+            doc, err := goquery.NewDocument(url)
+            if err != nil {
+                fmt.Println("Whoops!")
+                return
             }
-        })
+            doc.Find(".entry").Each(func(i int, s *goquery.Selection) {
+                if i < count {
+                    title := s.Find("p .title").Text()
+                    fmt.Printf("[%d]: %s\n\n",i,  title)
+                }
+            })
+        }
     }
 }
 
@@ -47,6 +56,8 @@ func main() {
         urls = append(urls, url)
     }
 
+    fmt.Println(urls)
+
     count := flag.Int("c", 10, "count")
     flag.Parse()
 
@@ -56,5 +67,5 @@ func main() {
         return
     }
 
-    // print_headlines(*count, *news)
+    print_headlines(*count, bool_flags, urls)
 }
