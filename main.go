@@ -10,24 +10,25 @@ var MAX = 24
 var conf_file = "reddit.conf"
 
 func print_headlines(count int, bool_flags []*bool, urls []string) {
-    fmt.Println(urls[0])
+    fmt.Println("FLAGS: ", bool_flags)
+    fmt.Println("URLS: ", urls)
     for i, f := range bool_flags {
         if *f {
-            fmt.Println(i)
-            fmt.Println("suffix: ", urls[i])
-            elem := []string{"https://reddit.com", urls[i]}
+            fmt.Println("suffix: ", urls[i+1])
+            elem := []string{"https://reddit.com", urls[i+1]}
             fmt.Println(elem)
             url := strings.Join(elem, "/")
             fmt.Println(url)
+
             doc, err := goquery.NewDocument(url)
             if err != nil {
                 fmt.Println("Whoops!")
                 return
             }
-            doc.Find(".entry").Each(func(i int, s *goquery.Selection) {
-                if i < count {
+            doc.Find(".entry").Each(func(c int, s *goquery.Selection) {
+                if c < count {
                     title := s.Find("p .title").Text()
-                    fmt.Printf("[%d]: %s\n\n",i,  title)
+                    fmt.Printf("[%d]: %s\n\n", c,  title)
                 }
             })
         }
