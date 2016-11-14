@@ -1,9 +1,11 @@
 from optparse import OptionParser
 from lxml import html
 import requests
+from subprocess import Popen, PIPE
 
 REDDIT_URL = "https://reddit.com/"
 SUFFIXES = {}
+COLS = 0
 
 
 def print_headlines(one, two, three, four):
@@ -19,6 +21,8 @@ def print_headlines(one, two, three, four):
 
 
 def main():
+    cols = Popen("tput cols", shell=True, stdout=PIPE).stdout.read()
+    COLS = int(cols)
     parser = OptionParser()
 
     with open('reddit.conf') as conf_file:
