@@ -33,7 +33,7 @@ def main():
             parser.add_option("-" + flag_name,
                               action="callback",
                               callback=print_headlines,
-                              help="don't print status messages to stdout")
+                              help="")
 
             SUFFIXES["-" + flag_name] = options[1]
 
